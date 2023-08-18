@@ -1,16 +1,14 @@
 const db = require("../model/db");
-const redis = require("ioredis");
+const redisClient = require("../model/redis");
 
 exports.getAllUser = (req, res) => {
   const userId = req.params.id;
 
   const redisKey = `user:${userId}`;
-  const redisClient = new redis();
 
-  redisClient.get(redisKey, (redisErr, cachedData) => {
-    if (cachedData) {
-      const parsedData = JSON.parse(cachedData);
-      res.json(parsedData);
+  redisClient.hgetall(redisKey, (redisErr, cachedData) => {
+    if (cachedData && Object.keys(cachedData).length > 0) {
+      res.json(cachedData);
       console.log("get data from cache");
     } else {
       const sql =
@@ -36,10 +34,18 @@ exports.getAllUser = (req, res) => {
             expense: result[0].total_expense,
           };
 
-          // Set data in Redis cache
-          redisClient.setex(redisKey, 120, JSON.stringify(userData)); // Cache for 2 minutes
+          // Set data in Redis cache as a hash using HMSET
+          redisClient.hmset(redisKey, userData, (hmsetErr, reply) => {
+            if (hmsetErr) {
+              console.error(hmsetErr);
+            } else {
+              // Set an expiration time for the hash in Redis (TTL: 1 hour)
+              redisClient.expire(redisKey, 3600);
+              console.log("add new data to cache");
+            }
+          });
+
           res.json(userData);
-          console.log("add new data to cache");
         }
       });
     }

@@ -1,4 +1,5 @@
 const db = require("../model/db");
+const redisClient = require("../model/redis");
 
 exports.getAllTransactions = (req, res) => {
   const sql = "SELECT * FROM transactions";
@@ -25,11 +26,10 @@ exports.createTransactions = (req, res) => {
         .status(500)
         .json({ error: "An error occurred while adding the transaction" });
     } else {
-      // transaction added
+      // Transaction added
       const insertedTransactionId = result.insertId;
 
       // Delete cache associated with user_id from Redis
-      const redisClient = new redis();
       const redisKey = `user:${user_id}`;
       redisClient.del(redisKey, (delErr, deletedCount) => {
         if (delErr) {
@@ -37,7 +37,6 @@ exports.createTransactions = (req, res) => {
         } else {
           console.log(`Deleted cache for user_id: ${user_id}`);
         }
-        redisClient.quit(); // Tutup koneksi Redis
       });
 
       res.json({
@@ -51,9 +50,8 @@ exports.createTransactions = (req, res) => {
 exports.updateTransaction = (req, res) => {
   const transactionId = req.params.id;
   const { type, amount } = req.body;
-  let userId; // Declare userId variable
+  let userId;
 
-  // To Get trasaction data relate with userID
   const fetchTransactionSQL = "SELECT user_id FROM transactions WHERE id = ?";
   db.query(fetchTransactionSQL, [transactionId], (fetchErr, fetchResult) => {
     if (fetchErr || fetchResult.length === 0) {
@@ -62,9 +60,8 @@ exports.updateTransaction = (req, res) => {
       return;
     }
 
-    userId = fetchResult[0].user_id; // Get the userId from the fetched transaction
+    userId = fetchResult[0].user_id;
 
-    // Update the transaction data
     const updateTransactionSQL =
       "UPDATE transactions SET type = ?, amount = ? WHERE id = ?";
     db.query(
@@ -77,19 +74,19 @@ exports.updateTransaction = (req, res) => {
             error: "An error occurred while updating the transaction",
           });
         } else {
-          res.json({ message: "Transaction updated successfully" });
-
-          // Now, delete the cache related to the userId
-          const redisClient = new redis();
+          // Clear the cache related to the userId
           const redisKey = `user:${userId}`;
           redisClient.del(redisKey, (delErr, deletedCount) => {
             if (delErr) {
               console.error(delErr);
             } else {
               console.log(`Deleted cache for userId: ${userId}`);
+              // Now, you can fetch user data from the database or cache
+              // without closing the Redis connection here
             }
-            redisClient.quit(); // Close the Redis connection
           });
+
+          res.json({ message: "Transaction updated successfully" });
         }
       }
     );
@@ -98,9 +95,8 @@ exports.updateTransaction = (req, res) => {
 
 exports.deleteTransaction = (req, res) => {
   const transactionId = req.params.id;
-  let userId; // Declare userId variable
+  let userId;
 
-  // To Get trasaction data relate with userID
   const fetchTransactionSQL = "SELECT user_id FROM transactions WHERE id = ?";
   db.query(fetchTransactionSQL, [transactionId], (fetchErr, fetchResult) => {
     if (fetchErr || fetchResult.length === 0) {
@@ -109,9 +105,8 @@ exports.deleteTransaction = (req, res) => {
       return;
     }
 
-    userId = fetchResult[0].user_id; // Get the userId from the fetched transaction
+    userId = fetchResult[0].user_id;
 
-    // Delete the transaction
     const deleteTransactionSQL = "DELETE FROM transactions WHERE id = ?";
     db.query(deleteTransactionSQL, [transactionId], (deleteErr) => {
       if (deleteErr) {
@@ -120,24 +115,22 @@ exports.deleteTransaction = (req, res) => {
           .status(500)
           .json({ error: "An error occurred while deleting the transaction" });
       } else {
-        res.json({ message: "Transaction deleted successfully" });
-
-        // Now, delete the cache related to the userId
-        const redisClient = new redis();
+        // Clear the cache related to the userId
         const redisKey = `user:${userId}`;
         redisClient.del(redisKey, (delErr, deletedCount) => {
           if (delErr) {
             console.error(delErr);
           } else {
             console.log(`Deleted cache for userId: ${userId}`);
+            res.json({ message: "Transaction deleted successfully" });
           }
-          redisClient.quit(); // Close the Redis connection
         });
       }
     });
   });
 };
 
+// Get transaction data by user
 exports.getTransactionsByUser = (req, res) => {
   const userId = req.params.userId;
   const sql = "SELECT * FROM transactions WHERE user_id = ?";
