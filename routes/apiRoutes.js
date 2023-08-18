@@ -15,4 +15,9 @@ router.put("/transactions/:id", transactionController.updateTransaction);
 
 router.delete("/transactions/:id", transactionController.deleteTransaction);
 
+router.get(
+  "/transactions/user/:userId",
+  transactionController.getTransactionsByUser
+);
+
 module.exports = router;
