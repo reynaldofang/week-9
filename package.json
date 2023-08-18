@@ -1,18 +1,22 @@
 {
-  "name": "week-9-reynaldofang",
+  "name": "week_9_reynaldofang",
   "version": "1.0.0",
-  "description": "Apply mySQL in week 9",
+  "description": "Nodejs apply in MySQL Database",
   "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
-    "mysql2": "^3.6.0",
-    "redis": "^4.6.7"
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "ioredis": "^5.3.2",
+    "mysql2": "^3.6.0"
   },
   "devDependencies": {
-    "body-parser": "^1.20.2",
-    "express": "^4.18.2"
+    "nodemon": "^3.0.1"
   }
 }

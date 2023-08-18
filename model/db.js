@@ -1,13 +1,13 @@
-import mysql from "mysql2";
+const mysql = require("mysql2");
 
-const mysqlConnection = mysql.createConnection({
+const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "rey123@",
-  database: "assigment-week9",
+  database: "ass_week9",
 });
 
-mysqlConnection.connect((err) => {
+db.connect((err) => {
   if (err) {
     console.log("Error Connecting to MySQL: ", err);
     return;
