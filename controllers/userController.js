@@ -6,16 +6,14 @@ exports.getAllUser = (req, res) => {
   db.query(sql, (err, result) => {
     if (err) {
       console.error(err);
-      res
-        .status(500)
-        .json({ error: "An error occurred while fetching users" });
+      res.status(500).json({ error: "An error occurred while fetching users" });
     } else {
       res.json(result);
     }
   });
 };
 
-exports.getAllUser = (req, res) => {
+exports.getUserById = (req, res) => {
   const userId = req.params.id;
 
   const redisKey = `user:${userId}`;
