@@ -1,11 +1,11 @@
 const express = require("express");
 
-// const userController = require("../controllers/userController");
+const userController = require("../controllers/userController");
 const transactionController = require("../controllers/transactionsController");
 
 const router = express.Router();
 
-// router.get("/users/:id", userController.getAllUser);
+router.get("/users/:id", userController.getAllUser);
 
 router.get("/transactions", transactionController.getAllTransactions);
 
