@@ -5,7 +5,9 @@ const transactionController = require("../controllers/transactionController");
 
 const router = express.Router();
 
-router.get("/users/:id", userController.getAllUser);
+router.get("/users", userController.getAllUser);
+
+router.get("/users/:id", userController.getUserById);
 
 router.get("/transactions", transactionController.getAllTransactions);
 

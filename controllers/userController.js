@@ -2,6 +2,20 @@ const db = require("../model/db");
 const redisClient = require("../model/redis");
 
 exports.getAllUser = (req, res) => {
+  const sql = "SELECT * FROM users";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      res
+        .status(500)
+        .json({ error: "An error occurred while fetching users" });
+    } else {
+      res.json(result);
+    }
+  });
+};
+
+exports.getAllUser = (req, res) => {
   const userId = req.params.id;
 
   const redisKey = `user:${userId}`;

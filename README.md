@@ -4,7 +4,7 @@ This is assigment in week 9 focus about Backend Implementation - NodeJs, MYSQL, 
 
 - Create table in MySQL Database.
 - Connect NodeJS to MYSQL RDMBS to perform CRUD operations.
-- [Adavance]
+- (Advance Assigment)
 
 If you want to follow me on social media, you can directly click the link below.
 
@@ -14,6 +14,16 @@ If you want to follow me on social media, you can directly click the link below.
 
 ### Deploy Link
 
-You can check my website here
+You can hit back-end API here
 
-[Financial Tracker with API - By Reynaldo](https://week-8-reynaldofang.netlify.app/)
+[https://week9-reynaldofang.cyclic.cloud ](https://week9-reynaldofang.cyclic.cloud)
+
+| Name                         | HTTP Method | Endpoint                                                                       | Requirements                                                                                        |
+| ---------------------------- | ----------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| **All List User**            | `GET`       | `/users`                               |
+| **User By ID**     | `GET`       | `/users/:id`                  | Request Params: `id: number`
+| **All List Transaction**          | `GET`       | `/transactions`                 |                                                                        |
+| **Create New Transaction**       | `POST`      | `/transactions`                  | Request Body: `user_id: number, type: string, amount: number`                                       |
+| **Update Transaction by ID** | `PUT`       | `/transactions/:id`| Request Params: `id: number` <br> <br>Request Body: `user_id: number, type: string, amount: number` |
+| **Delete Transaction by ID** | `DELETE`    | `/transactions/:id`            | Request Params: `id: number`                                                                        |
+| **Get Transaction by User** | `GET`    | `/transactions/user/:userId`            | Request Params: `userId: number`                                                                        |
