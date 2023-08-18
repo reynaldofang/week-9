@@ -4,8 +4,8 @@
   "description": "Nodejs apply in MySQL Database",
   "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "start2": "nodemon index.js",
+    "start": "node app.js",
+    "start2": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
